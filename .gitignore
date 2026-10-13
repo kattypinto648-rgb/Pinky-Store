@@ -1,0 +1,19 @@
+# Docker
+pinky_db_data/
+
+# Node / TypeScript
+node_modules/
+public/js/*.js
+public/js/*.js.map
+!public/js/vendor/
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# macOS
+.DS_Store
+
+# Config local
+.env
+config/database.local.php

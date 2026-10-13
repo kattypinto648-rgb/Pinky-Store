@@ -1,0 +1,46 @@
+services:
+  web:
+    build: .
+    container_name: pinky_web
+    ports:
+      - "8090:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: pinky_store
+      DB_USER: pinky
+      DB_PASS: pinky123
+
+  db:
+    image: mysql:8.0
+    container_name: pinky_db
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: pinky_store
+      MYSQL_USER: pinky
+      MYSQL_PASSWORD: pinky123
+    volumes:
+      - pinky_db_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: pinky_pma
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: pinky
+      PMA_PASSWORD: pinky123
+    depends_on:
+      - db
+
+volumes:
+  pinky_db_data:
