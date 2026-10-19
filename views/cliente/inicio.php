@@ -1,9 +1,24 @@
-<?php require __DIR__ . '/../layout/headerClient.php'; ?>
+<?php
+$titulo = 'Inicio';
+require __DIR__ . '/../layout/headerClient.php';
+?>
 
-<section class="banner">
-  <img src="/img/banner/banner1.jpg" alt="Banner 1" class="activa">
-  <img src="/img/banner/banner2.jpeg" alt="Banner 2">
-  <img src="/img/banner/banner3.jpeg" alt="Banner 3">
+<section class="banner" style="position: relative;">
+    <img src="/img/banner/banner01.jpg"
+         alt="Banner 1"
+         class="activa">
+
+    <a href="/productos"
+       aria-label="Ver ahora"
+       style="position: absolute;
+              top: 76%;
+              left: 69%;
+              width: 184px;
+              height: 37px;
+              transform: translate(-50%, -50%);
+              z-index: 9999;
+              display: block;">
+    </a>
 </section>
 
 <div class="seccion-beneficios">
@@ -54,19 +69,9 @@
           <img src="<?= htmlspecialchars($p['imagen']) ?>" alt="<?= htmlspecialchars($p['nombre']) ?>">
         </div>
         <h3><?= htmlspecialchars($p['nombre']) ?></h3>
+        <span class="card-categoria"><?= htmlspecialchars($p['categoria']) ?></span>
         <span class="precio">$ <?= number_format($p['precio'], 0, ',', '.') ?></span>
-
-        <form method="POST" action="/carrito/agregar">
-          <input type="hidden" name="id" value="<?= $p['id'] ?>">
-          <select name="talle" required>
-            <?php foreach ($p['variantes'] as $v): ?>
-              <?php if ($v['stock'] > 0): ?>
-                <option value="<?= htmlspecialchars($v['talle']) ?>"><?= htmlspecialchars($v['talle']) ?></option>
-              <?php endif; ?>
-            <?php endforeach; ?>
-          </select>
-          <button type="submit" class="boton-agregar">Agregar</button>
-        </form>
+        <a href="/productos" class="boton-agregar" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box;">Ver en productos</a>
       </div>
     <?php endforeach; ?>
   </div>

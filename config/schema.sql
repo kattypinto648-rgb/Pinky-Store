@@ -68,6 +68,8 @@ CREATE TABLE pedidos (
     fecha           DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     subtotal        DECIMAL(10,2) NOT NULL DEFAULT 0,
     costo_envio     DECIMAL(10,2) NOT NULL DEFAULT 0,
+    descuento       DECIMAL(10,2) NOT NULL DEFAULT 0,
+    codigo_promocion VARCHAR(100) NULL,
     total           DECIMAL(10,2) NOT NULL DEFAULT 0,
     metodo_pago     VARCHAR(40)  DEFAULT NULL,
     metodo_entrega  VARCHAR(40)  DEFAULT NULL,

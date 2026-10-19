@@ -97,4 +97,25 @@ class AdminController
             'items' => $notifs,
         ]);
     }
+
+    public function perfil(array $params = []): void
+    {
+        Auth::requiereAdmin();
+        
+        $db = getDB();
+        
+        $stmt = $db->prepare(
+            "SELECT * FROM usuarios WHERE id = ?"
+        );
+        
+        $stmt->execute([$_SESSION['usuario']['id']]);
+        
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$usuario) {
+            http_response_code(404);
+            exit('No se encontró el usuario administrador.');
+        }
+        
+        require __DIR__ . '/../../views/admin/perfil.php';
+    }
 }

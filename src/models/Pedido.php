@@ -13,25 +13,28 @@ class Pedido
                 $subtotal += $item['subtotal'];
             }
 
-            $costoEnvio = ($datos['metodo_entrega'] === 'Envío a domicilio') ? 2500.00 : 0.00;
-            $total = $subtotal + $costoEnvio;
+            $costoEnvio = (
+                $datos['metodo_entrega'] === 'Envío a domicilio'
+            ) ? 2500.00 : 0.00;
+            $porcentaje = (float) ($datos['porcentaje_descuento'] ?? 0);
+            $descuento = round($subtotal * $porcentaje / 100, 2);
+            $total = max(0, $subtotal + $costoEnvio - $descuento);
 
-            // Código de factura correlativo
             $stmtMax = $db->query("SELECT COUNT(*) FROM pedidos");
             $num = ((int)$stmtMax->fetchColumn()) + 1;
             $codigo = 'FACTURA-' . str_pad((string)$num, 5, '0', STR_PAD_LEFT);
 
             $stmt = $db->prepare('
-                INSERT INTO pedidos
-                  (codigo, id_usuario, subtotal, costo_envio, total, metodo_pago, metodo_entrega, estado)
-                VALUES
-                  (:codigo, :id_usuario, :subtotal, :costo_envio, :total, :metodo_pago, :metodo_entrega, "Pendiente")
+                INSERT INTO pedidos(codigo, id_usuario, subtotal, costo_envio, descuento, codigo_promocion, total, metodo_pago, metodo_entrega, estado)
+                VALUES(:codigo, :id_usuario, :subtotal, :costo_envio, :descuento, :codigo_promocion, :total, :metodo_pago, :metodo_entrega, "Pendiente")
             ');
             $stmt->execute([
                 ':codigo'         => $codigo,
                 ':id_usuario'     => $idUsuario,
                 ':subtotal'       => $subtotal,
                 ':costo_envio'    => $costoEnvio,
+                ':descuento'      => $descuento,
+                ':codigo_promocion'=>$datos['codigo_promocion'],
                 ':total'          => $total,
                 ':metodo_pago'    => $datos['metodo_pago'],
                 ':metodo_entrega' => $datos['metodo_entrega'],
@@ -51,6 +54,9 @@ class Pedido
                     ':precio_unit'  => $item['precio'],
                 ]);
             }
+
+            // Registrar historial inicial
+            self::registrarHistorial($idPedido, 'Pendiente', $idUsuario);
 
             $db->commit();
             return $codigo;
@@ -103,11 +109,13 @@ class Pedido
         return $stmt->fetchAll();
     }
 
-    public static function cambiarEstado(int $id, string $estado): void
+    public static function cambiarEstado(int $id, string $estado, ?int $idUsuario = null): void
     {
         $db = getDB();
         $stmt = $db->prepare('UPDATE pedidos SET estado = :estado WHERE id = :id');
         $stmt->execute([':estado' => $estado, ':id' => $id]);
+
+        self::registrarHistorial($id, $estado, $idUsuario);
     }
 
     public static function eliminar(int $id): void
@@ -116,20 +124,32 @@ class Pedido
         $stmt = $db->prepare('DELETE FROM pedidos WHERE id = :id');
         $stmt->execute([':id' => $id]);
     }
-        public static function porIdConCliente(int $id): ?array
+
+    public static function registrarHistorial(int $idPedido, string $estado, ?int $idUsuario = null): void
     {
         $db = getDB();
         $stmt = $db->prepare('
-            SELECT p.*,
-                   u.nombre AS cliente_nombre,
-                   u.apellido AS cliente_apellido,
-                   u.email AS cliente_email
-            FROM pedidos p
-            JOIN usuarios u ON u.id = p.id_usuario
-            WHERE p.id = :id
+            INSERT INTO pedido_historial (id_pedido, estado, id_usuario)
+            VALUES (:id, :estado, :user)
         ');
-        $stmt->execute([':id' => $id]);
-        $p = $stmt->fetch();
-        return $p ?: null;
+        $stmt->execute([
+            ':id'     => $idPedido,
+            ':estado' => $estado,
+            ':user'   => $idUsuario,
+        ]);
+    }
+
+    public static function historial(int $idPedido): array
+    {
+        $db = getDB();
+        $stmt = $db->prepare('
+            SELECT h.*, u.nombre AS usuario_nombre
+            FROM pedido_historial h
+            LEFT JOIN usuarios u ON u.id = h.id_usuario
+            WHERE h.id_pedido = :id
+            ORDER BY h.fecha DESC
+        ');
+        $stmt->execute([':id' => $idPedido]);
+        return $stmt->fetchAll();
     }
 }

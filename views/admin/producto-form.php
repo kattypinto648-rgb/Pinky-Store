@@ -1,43 +1,106 @@
 <?php require __DIR__ . '/../layout/headerAdmin.php'; ?>
 
+<?php
+$variantesActuales = $producto['variantes'] ?? [];
+$stockPorTalle = [];
+foreach ($variantesActuales as $v) {
+    $stockPorTalle[$v['talle']] = (int)$v['stock'];
+}
+$tallesPosibles = ['XS', 'S', 'M', 'L', 'XL', 'Unico'];
+?>
+
 <section class="centrado">
   <h2><?= $producto ? 'Editar producto' : 'Nuevo producto' ?></h2>
 
-  <form method="POST" action="/admin/productos/guardar">
+  <form method="POST" action="/admin/productos/guardar" enctype="multipart/form-data">
     <input type="hidden" name="id" value="<?= $producto['id'] ?? '' ?>">
 
-    <label for="codigo">Codigo</label>
+    <label for="codigo">Código</label>
     <input type="text" id="codigo" name="codigo"
-           value="<?= htmlspecialchars($producto['codigo'] ?? '') ?>" required>
+           value="<?= htmlspecialchars($producto['codigo'] ?? '') ?>"
+           placeholder="CAM-01" required>
 
     <label for="nombre">Nombre</label>
     <input type="text" id="nombre" name="nombre"
-           value="<?= htmlspecialchars($producto['nombre'] ?? '') ?>" required>
+           value="<?= htmlspecialchars($producto['nombre'] ?? '') ?>"
+           placeholder="Camisa Oxford Blanca" required>
 
-    <label for="descripcion">Descripcion</label>
+    <label for="descripcion">Descripción</label>
     <input type="text" id="descripcion" name="descripcion"
            value="<?= htmlspecialchars($producto['descripcion'] ?? '') ?>">
 
-    <label for="categoria">Categoria</label>
+    <label for="categoria">Categoría</label>
     <input type="text" id="categoria" name="categoria"
-           value="<?= htmlspecialchars($producto['categoria'] ?? '') ?>" required>
+           value="<?= htmlspecialchars($producto['categoria'] ?? '') ?>"
+           placeholder="Camisas" required>
 
     <label for="color">Color</label>
     <input type="text" id="color" name="color"
-           value="<?= htmlspecialchars($producto['color'] ?? '') ?>">
+           value="<?= htmlspecialchars($producto['color'] ?? '') ?>"
+           placeholder="Blanco">
 
     <label for="precio">Precio</label>
     <input type="number" id="precio" name="precio" step="0.01" min="1"
-           value="<?= htmlspecialchars($producto['precio'] ?? '') ?>" required>
+           value="<?= htmlspecialchars($producto['precio'] ?? '') ?>"
+           placeholder="100000" required>
 
-    <label for="imagen">URL de la imagen</label>
-    <input type="text" id="imagen" name="imagen"
-           value="<?= htmlspecialchars($producto['imagen'] ?? '') ?>" required>
+    <label>Imagen actual</label>
+    <?php if (!empty($producto['imagen'])): ?>
+      <img src="<?= htmlspecialchars($producto['imagen']) ?>" alt=""
+           style="width:100px;height:auto;display:block;margin-bottom:8px;">
+    <?php endif; ?>
+
+    <label for="imagen">Subir nueva imagen (opcional)</label>
+    <input type="file" id="imagen" name="imagen" accept="image/*">
+
+    <label for="imagen_url">O pegar URL de imagen</label>
+    <input type="text" id="imagen_url" name="imagen_url"
+           value="<?= htmlspecialchars($producto['imagen'] ?? '') ?>"
+           placeholder="/img/productos/...">
+
+    <fieldset style="margin-top:20px;border:1px solid #e0d0d6;padding:14px;background:#fff;">
+      <legend style="color:#b56b83;font-size:13px;padding:0 6px;">Talles y stock</legend>
+
+      <table style="width:100%;background:transparent;margin:0;">
+        <?php foreach ($tallesPosibles as $t): ?>
+          <?php
+            $tieneTalle = isset($stockPorTalle[$t]);
+            $stockVal = $stockPorTalle[$t] ?? 0;
+          ?>
+          <tr>
+            <td style="border:none;padding:6px 0;width:40px;">
+              <input type="checkbox" name="talles[]" value="<?= $t ?>" id="talle_<?= $t ?>"
+                     <?= $tieneTalle ? 'checked' : '' ?>
+                     onchange="toggleStock('<?= $t ?>')">
+            </td>
+            <td style="border:none;padding:6px 8px;">
+              <label for="talle_<?= $t ?>" style="margin:0;cursor:pointer;"><?= $t ?></label>
+            </td>
+            <td style="border:none;padding:6px 0;">
+              <input type="number" name="stock_<?= $t ?>" id="stock_<?= $t ?>"
+                     min="0" value="<?= $stockVal ?>"
+                     style="width:70px;padding:4px 6px;"
+                     <?= $tieneTalle ? '' : 'disabled' ?>>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </table>
+    </fieldset>
 
     <button type="submit">Guardar</button>
   </form>
 
   <p><a href="/admin/productos">Volver</a></p>
 </section>
+
+<script>
+function toggleStock(talle) {
+  const chk = document.getElementById('talle_' + talle);
+  const inp = document.getElementById('stock_' + talle);
+  if (!chk || !inp) return;
+  inp.disabled = !chk.checked;
+  if (chk.checked && inp.value === '0') inp.value = '1';
+}
+</script>
 
 <?php require __DIR__ . '/../layout/footerAdmin.php'; ?>

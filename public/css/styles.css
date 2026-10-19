@@ -423,6 +423,14 @@ h3 {
   background-color: #c98ba0;
 }
 
+.card-vista-admin {
+  text-align: center;
+  font-size: 12px;
+  color: #888888;
+  font-style: italic;
+  padding: 10px 0;
+}
+
 /* Toolbar productos */
 .productos-titulo {
   display: flex;
@@ -500,6 +508,43 @@ h3 {
   background-color: #b56b83;
   border-color: #b56b83;
   color: #ffffff;
+}
+
+/* Filtro de precio */
+.filtro-precio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  background-color: #ffffff;
+  border: 1px solid #e0d0d6;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  max-width: 100%;
+}
+
+.filtro-precio label {
+  font-size: 13px;
+  color: #666666;
+  margin: 0;
+}
+
+.filtro-precio input {
+  width: 100px;
+  padding: 6px 8px;
+  border: 1px solid #e0d0d6;
+  font-size: 13px;
+  margin: 0;
+}
+
+.filtro-precio button {
+  margin: 0;
+  padding: 6px 14px;
+  background-color: #b56b83;
+  color: #ffffff;
+  border: 1px solid #b56b83;
+  font-size: 13px;
+  cursor: pointer;
 }
 
 /* Categorías cards */
@@ -605,6 +650,57 @@ button:hover {
   background-color: #e8cdd6;
 }
 
+/* Talles y stock */
+.talles-fieldset {
+  margin-top: 20px;
+  border: 1px solid #e0d0d6;
+  padding: 14px;
+  background-color: #ffffff;
+}
+
+.talles-fieldset legend {
+  color: #b56b83;
+  font-size: 13px;
+  padding: 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.talles-tabla {
+  width: 100%;
+  background-color: transparent;
+  margin: 0;
+}
+
+.talles-tabla tr,
+.talles-tabla td {
+  border: none;
+  background-color: transparent;
+}
+
+.talles-tabla td {
+  padding: 6px 0;
+  vertical-align: middle;
+}
+
+.talles-tabla input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.talles-tabla input[type="number"] {
+  width: 70px;
+  padding: 4px 6px;
+  margin: 0;
+}
+
+.talles-tabla label {
+  margin: 0;
+  cursor: pointer;
+  font-size: 14px;
+  color: #2b2b2b;
+}
+
 /* Carrito */
 .carrito-vacio {
   background-color: #ffffff;
@@ -616,33 +712,6 @@ button:hover {
 .carrito-vacio p {
   margin: 0 0 20px 0;
   color: #666666;
-}
-
-.carrito-contenedor {
-  background-color: #ffffff;
-  border: 1px solid #e0d0d6;
-  padding: 20px;
-}
-
-.carrito-contenedor table {
-  margin: 0 0 16px 0;
-  border: none;
-}
-
-.carrito-contenedor table th,
-.carrito-contenedor table td {
-  border-left: none;
-  border-right: none;
-}
-
-.carrito-contenedor table th:first-child,
-.carrito-contenedor table td:first-child {
-  border-left: 1px solid #e0d0d6;
-}
-
-.carrito-contenedor table th:last-child,
-.carrito-contenedor table td:last-child {
-  border-right: 1px solid #e0d0d6;
 }
 
 .cantidad-form {
@@ -852,6 +921,144 @@ button:hover {
   background-color: #f7e1e8;
 }
 
+/* Perfil admin */
+.perfil-admin-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 40px 0;
+}
+
+.perfil-admin-card {
+  background-color: #ffffff;
+  border: 1px solid #e0d0d6;
+  width: 100%;
+  max-width: 620px;
+  padding: 32px;
+}
+
+.perfil-admin-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f0e0e6;
+  margin-bottom: 20px;
+}
+
+.perfil-admin-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #b56b83;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 1px;
+}
+
+.perfil-admin-titulo h1 {
+  margin: 0 0 4px 0;
+  font-size: 22px;
+  color: #2b2b2b;
+}
+
+.perfil-admin-titulo p {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: #888888;
+}
+
+.perfil-admin-badge {
+  display: inline-block;
+  background-color: #f7e1e8;
+  color: #b56b83;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.perfil-admin-datos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.perfil-admin-dato {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #f0e0e6;
+}
+
+.perfil-admin-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #f7e1e8;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.perfil-admin-icono svg {
+  width: 18px;
+  height: 18px;
+}
+
+.perfil-admin-label {
+  display: block;
+  font-size: 11px;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 2px;
+}
+
+.perfil-admin-valor {
+  display: block;
+  font-size: 13px;
+  color: #2b2b2b;
+  font-weight: bold;
+}
+
+.perfil-admin-acciones {
+  display: flex;
+  gap: 10px;
+}
+
+.perfil-admin-btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px 16px;
+  background-color: #b56b83;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  border: 1px solid #b56b83;
+}
+
+.perfil-admin-btn:hover {
+  background-color: #c98ba0;
+}
+
+.perfil-admin-btn-outline {
+  background-color: #ffffff;
+  color: #b56b83;
+}
+
+.perfil-admin-btn-outline:hover {
+  background-color: #f7e1e8;
+}
+
 /* Páginas info */
 .pagina-info {
   max-width: 900px;
@@ -1028,6 +1235,57 @@ button:hover {
 
 .error { color: #b00020; font-size: 14px; margin: 8px 0; }
 .ok    { color: #1f5c2c; font-size: 14px; margin: 8px 0; }
+
+/* Aviso carrito */
+.aviso-carrito {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  background-color: #b56b83;
+  color: #ffffff;
+  padding: 14px 22px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9999;
+  pointer-events: none;
+  max-width: 320px;
+}
+
+.aviso-carrito.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 404 */
+.pagina-404 {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.pagina-404 h1 {
+  font-size: 100px;
+  color: #b56b83;
+  margin: 0;
+  line-height: 1;
+}
+
+.pagina-404 p {
+  font-size: 16px;
+  color: #666666;
+  margin: 10px 0;
+}
+
+.ruta-404 code {
+  background-color: #f7e1e8;
+  padding: 3px 8px;
+  color: #b56b83;
+  font-size: 13px;
+}
 
 /* Admin topbar */
 .admin-topbar {
@@ -1497,30 +1755,84 @@ footer {
   .admin-layout {
     flex-direction: column;
   }
-/*carrito notif*/
-.aviso-carrito,
-#aviso-carrito {
-  position: fixed;
-  top: 80px;
-  right: 24px;
-  background-color: #b56b83;
-  color: #ffffff;
-  padding: 14px 22px;
-  font-size: 14px;
-  font-weight: bold;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  border-radius: 4px;
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 9999;
-  pointer-events: none;
-  max-width: 320px;
+  .perfil-admin-datos {
+    grid-template-columns: 1fr;
+  }
+  .perfil-admin-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  .carrito-aviso-invitado {
+  background-color: #f7e1e8;
+  border: 1px solid #e0d0d6;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  text-align: center;
 }
 
-.aviso-carrito.visible,
-#aviso-carrito.visible {
-  opacity: 1;
-  transform: translateY(0);
+.carrito-aviso-invitado p {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #555555;
 }
+
+.carrito-aviso-invitado .link-ver-todos {
+  margin: 0 6px;
+}
+.carrito-resumen {
+  font-size: 14px;
+  color: #666666;
+  margin: 0 0 16px 0;
+}
+
+.carrito-resumen strong {
+  color: #b56b83;
+}
+
+.carrito-aviso-invitado {
+  background-color: #f7e1e8;
+  border: 1px solid #b56b83;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.carrito-aviso-invitado p {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #444444;
+}
+
+.carrito-aviso-invitado p strong {
+  color: #b56b83;
+  font-size: 15px;
+}
+
+.carrito-aviso-botones {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.carrito-aviso-botones .boton-agregar {
+  width: auto;
+  padding: 10px 22px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.boton-agregar-outline {
+  background-color: #ffffff !important;
+  color: #b56b83 !important;
+}
+
+.boton-agregar-outline:hover {
+  background-color: #f7e1e8 !important;
+}
+
+
 }

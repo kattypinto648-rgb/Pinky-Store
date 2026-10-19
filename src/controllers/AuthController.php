@@ -11,7 +11,7 @@ class AuthController
         require __DIR__ . '/../../views/cliente/login.php';
     }
 
-    public function procesarLogin(array $params = []): void
+        public function procesarLogin(array $params = []): void
     {
         $email = trim($_POST['email'] ?? '');
         $clave = $_POST['clave'] ?? '';
@@ -28,6 +28,29 @@ class AuthController
             exit;
         }
 
+        // Carrito previo de sesión
+        $carritoPrevio = $_SESSION['carrito'] ?? [];
+
+        // Carrito de localStorage (enviado desde el form)
+        $carritoLocal = json_decode($_POST['carrito_local'] ?? '[]', true) ?: [];
+
+        // Combinar (el local se suma al previo, evitando duplicados)
+        foreach ($carritoLocal as $item) {
+            $encontrado = false;
+            foreach ($carritoPrevio as &$p) {
+                if ($p['id'] == $item['id'] && $p['talle'] === $item['talle']) {
+                    $p['cantidad'] += (int)($item['cantidad'] ?? 1);
+                    $p['subtotal'] = $p['cantidad'] * $p['precio'];
+                    $encontrado = true;
+                    break;
+                }
+            }
+            unset($p);
+            if (!$encontrado) {
+                $carritoPrevio[] = $item;
+            }
+        }
+
         $_SESSION['usuario'] = [
             'id'       => $u['id'],
             'email'    => $u['email'],
@@ -35,6 +58,15 @@ class AuthController
             'apellido' => $u['apellido'],
             'rol'      => $u['rol'],
         ];
+
+        $_SESSION['carrito'] = $carritoPrevio;
+
+        // Recordarme
+        if (!empty($_POST['recordarme'])) {
+            setcookie('pinky_email', $u['email'], time() + (86400 * 30), '/');
+        } else {
+            setcookie('pinky_email', '', time() - 3600, '/');
+        }
 
         if ($u['rol'] === 'admin') {
             header('Location: /admin');
@@ -92,7 +124,16 @@ class AuthController
 
     public function logout(array $params = []): void
     {
+        // Preservar carrito antes de destruir la sesión
+        $carrito = $_SESSION['carrito'] ?? null;
+
         session_destroy();
+        session_start();
+
+        if ($carrito !== null) {
+            $_SESSION['carrito'] = $carrito;
+        }
+
         header('Location: /');
         exit;
     }

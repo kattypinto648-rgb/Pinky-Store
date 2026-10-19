@@ -11,7 +11,7 @@
   <?php else: ?>
     <table>
       <tr>
-        <th>Codigo</th>
+        <th>Código</th>
         <th>Nombre</th>
         <th>Descuento</th>
         <th>Estado</th>
@@ -22,11 +22,15 @@
           <td><?= htmlspecialchars($p['codigo']) ?></td>
           <td><?= htmlspecialchars($p['nombre']) ?></td>
           <td><?= (int)$p['porcentaje'] ?>%</td>
-          <td><?= $p['activa'] ? 'Activa' : 'Inactiva' ?></td>
+          <td>
+            <span class="admin-estado estado-<?= $p['activa'] ? 'entregado' : 'cancelado' ?>">
+              <?= $p['activa'] ? 'Activa' : 'Inactiva' ?>
+            </span>
+          </td>
           <td class="tabla-acciones">
             <a href="/admin/promociones/editar/<?= $p['id'] ?>">Editar</a>
             <form method="POST" action="/admin/promociones/eliminar" style="display:inline"
-                  onsubmit="return confirm('¿Eliminar esta promocion?')">
+                  onsubmit="return confirm('¿Eliminar esta promoción?')">
               <input type="hidden" name="id" value="<?= $p['id'] ?>">
               <button type="submit">Eliminar</button>
             </form>

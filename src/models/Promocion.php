@@ -17,6 +17,24 @@ class Promocion
         return $p ?: null;
     }
 
+    public static function porCodigoActivo(string $codigo): ?array
+    {
+    $db = getDB();
+
+    $stmt = $db->prepare('
+        SELECT *
+        FROM promociones
+        WHERE UPPER(codigo) = UPPER(:codigo)
+          AND activa = 1
+        LIMIT 1
+    ');
+
+    $stmt->execute([':codigo' => trim($codigo)]);
+    $promocion = $stmt->fetch();
+
+    return $promocion ?: null;
+    }
+
     public static function crear(array $d): void
     {
         $db = getDB();

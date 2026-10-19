@@ -30,6 +30,26 @@
       <h3>Remeras</h3>
       <p>Ver productos</p>
     </a>
+    <a href="/productos?cat=Tops" class="categoria-card">
+      <h3>Tops</h3>
+      <p>Ver productos</p>
+    </a>
+    <a href="/productos?cat=Buzos" class="categoria-card">
+      <h3>Buzos</h3>
+      <p>Ver productos</p>
+    </a>
+    <a href="/productos?cat=Pantalones" class="categoria-card">
+      <h3>Pantalones</h3>
+      <p>Ver productos</p>
+    </a>
+    <a href="/productos?cat=Shorts" class="categoria-card">
+      <h3>Shorts</h3>
+      <p>Ver productos</p>
+    </a>
+    <a href="/productos?cat=Jeans" class="categoria-card">
+      <h3>Jeans</h3>
+      <p>Ver productos</p>
+    </a>
   </div>
 </section>
 

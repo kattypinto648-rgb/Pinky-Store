@@ -1,20 +1,18 @@
-<?php require __DIR__ . '/../layout/headerClient.php'; ?>
+<?php
+$titulo = 'Mis pedidos';
+require __DIR__ . '/../layout/headerClient.php';
+?>
 
 <section>
   <h2>Mis pedidos</h2>
 
   <?php if ($ok): ?>
-    <p class="ok">Compra confirmada. Código: <?= htmlspecialchars($ok) ?></p>
-  <?php endif; ?>
-
-  <?php if (isset($_GET['cancelado'])): ?>
-    <p class="ok">Pedido cancelado correctamente</p>
-  <?php endif; ?>
+  <p class="ok">Compra confirmada. Código: <?= htmlspecialchars($ok) ?></p>
+  <p class="aclaracion">Te enviamos un email con los datos del pedido a <strong><?= htmlspecialchars($_SESSION['usuario']['email']) ?></strong>.</p>
+<?php endif; ?>
 
   <?php if (empty($pedidos)): ?>
-    <p>Todavía no tenés pedidos
-      
-    </p>
+    <p>Todavía no tenés pedidos.</p>
     <p><a href="/productos">Ver productos</a></p>
   <?php else: ?>
     <table>
@@ -24,7 +22,6 @@
         <th>Total</th>
         <th>Estado</th>
         <th>Detalle</th>
-        <th>Acciones</th>
       </tr>
       <?php foreach ($pedidos as $p): ?>
         <tr>
@@ -39,29 +36,23 @@
           <td>
             <?php foreach ($p['items'] as $it): ?>
               <div class="pedido-item">
-                <?= htmlspecialchars($it['producto_nombre']) ?>
-                — Talle <?= htmlspecialchars($it['talle']) ?>
-                × <?= $it['cantidad'] ?>
-                = $ <?= number_format($it['precio_unit'] * $it['cantidad'], 0, ',', '.') ?>
+                <?= htmlspecialchars($it['producto_nombre']) ?> — Talle <?= htmlspecialchars($it['talle']) ?> × <?= $it['cantidad'] ?>
               </div>
             <?php endforeach; ?>
-            <div class="pedido-item pedido-item-total">
-              <strong>Envío:</strong> <?= htmlspecialchars($p['metodo_entrega']) ?>
-              ($ <?= number_format($p['costo_envio'], 0, ',', '.') ?>)
-            </div>
-            <div class="pedido-item">
-              <strong>Pago:</strong> <?= htmlspecialchars($p['metodo_pago']) ?>
-            </div>
-          </td>
-          <td>
-            <?php if ($p['estado'] === 'Pendiente'): ?>
-              <form method="POST" action="/mis-pedidos/cancelar"
-                    onsubmit="return confirm('¿Seguro que querés cancelar este pedido?')">
-                <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                <button type="submit" class="btn-eliminar">Cancelar</button>
-              </form>
-            <?php else: ?>
-              —
+
+            <?php
+              require_once __DIR__ . '/../../src/models/Pedido.php';
+              $historial = \Pedido::historial((int)$p['id']);
+            ?>
+            <?php if (!empty($historial)): ?>
+              <details style="margin-top:8px;font-size:12px;">
+                <summary style="cursor:pointer;color:#b56b83;">Ver historial de estados</summary>
+                <ul style="margin:6px 0;padding-left:16px;">
+                  <?php foreach ($historial as $h): ?>
+                    <li><?= htmlspecialchars($h['fecha']) ?> — <?= htmlspecialchars($h['estado']) ?> (<?= htmlspecialchars($h['usuario_nombre'] ?? 'sistema') ?>)</li>
+                  <?php endforeach; ?>
+                </ul>
+              </details>
             <?php endif; ?>
           </td>
         </tr>

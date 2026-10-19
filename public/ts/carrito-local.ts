@@ -5,13 +5,14 @@ interface ItemCarrito {
   precio: number;
   cantidad: number;
   subtotal: number;
+  stock: number;
 }
 
-const CLAVE_CARRITO: string = 'pinky_carrito';
+const CLAVE = 'pinky_carrito';
 
 function leerCarrito(): ItemCarrito[] {
   try {
-    const datos = localStorage.getItem(CLAVE_CARRITO);
+    const datos = localStorage.getItem(CLAVE);
     return datos ? JSON.parse(datos) : [];
   } catch {
     return [];
@@ -19,7 +20,12 @@ function leerCarrito(): ItemCarrito[] {
 }
 
 function guardarCarrito(items: ItemCarrito[]): void {
-  localStorage.setItem(CLAVE_CARRITO, JSON.stringify(items));
+  localStorage.setItem(CLAVE, JSON.stringify(items));
+  actualizarBadge();
+}
+
+function limpiarCarrito(): void {
+  localStorage.removeItem(CLAVE);
   actualizarBadge();
 }
 
@@ -32,68 +38,62 @@ function actualizarBadge(): void {
   }
 }
 
-function mostrarAviso(texto: string): void {
-  const previo = document.getElementById('aviso-carrito');
-  if (previo) previo.remove();
-
-  const aviso = document.createElement('div');
-  aviso.id = 'aviso-carrito';
-  aviso.textContent = texto;
-  document.body.appendChild(aviso);
-
-  setTimeout(() => aviso.classList.add('visible'), 10);
-
-  setTimeout(() => {
-    aviso.classList.remove('visible');
-    setTimeout(() => aviso.remove(), 300);
-  }, 2000);
-}
-
-function agregarAlCarrito(id: number, nombre: string, talle: string, precio: number): void {
+function agregarLocal(id: number, nombre: string, talle: string, precio: number, stock: number): boolean {
   const items = leerCarrito();
   const existente = items.find(i => i.id === id && i.talle === talle);
 
   if (existente) {
+    if (existente.cantidad >= existente.stock) return false;
     existente.cantidad++;
     existente.subtotal = existente.cantidad * existente.precio;
   } else {
+    if (stock < 1) return false;
     items.push({
-      id: id,
-      nombre: nombre,
-      talle: talle,
-      precio: precio,
+      id, nombre, talle, precio,
       cantidad: 1,
       subtotal: precio,
+      stock: stock,
     });
   }
 
   guardarCarrito(items);
-  mostrarAviso('✓ ' + nombre + ' agregado al carrito');
-
-  const form = new FormData();
-  form.append('id', String(id));
-  form.append('talle', talle);
-
-  fetch('/carrito/agregar', {
-    method: 'POST',
-    headers: { 'Accept': 'application/json' },
-    body: form
-  }).catch(() => {});
+  return true;
 }
 
-function vaciarCarrito(): void {
-  localStorage.removeItem(CLAVE_CARRITO);
-  actualizarBadge();
+function eliminarLocal(indice: number): void {
+  const items = leerCarrito();
+  items.splice(indice, 1);
+  guardarCarrito(items);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  actualizarBadge();
-});
+function modificarCantidadLocal(indice: number, delta: number): void {
+  const items = leerCarrito();
+  const item = items[indice];
+  if (!item) return;
+
+  const nueva = item.cantidad + delta;
+
+  if (nueva < 1) {
+    items.splice(indice, 1);
+    guardarCarrito(items);
+    return;
+  }
+
+  if (nueva > item.stock) return;
+
+  item.cantidad = nueva;
+  item.subtotal = nueva * item.precio;
+  guardarCarrito(items);
+}
+
+document.addEventListener('DOMContentLoaded', actualizarBadge);
 
 (window as any).pinkyCarrito = {
-  leerCarrito: leerCarrito,
-  guardarCarrito: guardarCarrito,
-  agregarAlCarrito: agregarAlCarrito,
-  vaciarCarrito: vaciarCarrito,
-  actualizarBadge: actualizarBadge,
+  leerCarrito,
+  guardarCarrito,
+  limpiarCarrito,
+  agregarLocal,
+  eliminarLocal,
+  modificarCantidadLocal,
+  actualizarBadge,
 };

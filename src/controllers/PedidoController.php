@@ -12,23 +12,6 @@ class PedidoController
         require __DIR__ . '/../../views/admin/pedidos.php';
     }
 
-    public function detalle(array $params = []): void
-    {
-        Auth::requiereAdmin();
-
-        $id = (int)($params['id'] ?? 0);
-        $pedido = Pedido::porIdConCliente($id);
-
-        if (!$pedido) {
-            header('Location: /admin/pedidos');
-            exit;
-        }
-
-        $pedido['items'] = Pedido::itemsDe($id);
-
-        require __DIR__ . '/../../views/admin/pedido-detalle.php';
-    }
-
     public function cambiarEstado(array $params = []): void
     {
         Auth::requiereAdmin();
@@ -39,7 +22,8 @@ class PedidoController
         $validos = ['Pendiente', 'Enviado', 'Entregado', 'Cancelado'];
 
         if ($id > 0 && in_array($estado, $validos, true)) {
-            Pedido::cambiarEstado($id, $estado);
+            $idUsuario = (int)($_SESSION['usuario']['id'] ?? 0);
+            Pedido::cambiarEstado($id, $estado, $idUsuario);
         }
 
         header('Location: /admin/pedidos');

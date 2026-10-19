@@ -67,18 +67,13 @@ class Producto
         return $stmt->fetchAll();
     }
 
-        public static function destacados(int $limite = 4): array
+    public static function destacados(int $limite = 4): array
     {
         $db = getDB();
         $stmt = $db->prepare('SELECT * FROM productos WHERE activo = 1 ORDER BY id LIMIT :lim');
         $stmt->bindValue(':lim', $limite, PDO::PARAM_INT);
         $stmt->execute();
-        $productos = $stmt->fetchAll();
-
-        foreach ($productos as &$p) {
-            $p['variantes'] = self::variantesDe((int)$p['id']);
-        }
-        return $productos;
+        return $stmt->fetchAll();
     }
 
     public static function enPromocion(): array

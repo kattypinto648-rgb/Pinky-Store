@@ -3,12 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pinky Store</title>
+  <title><?= $titulo ?? 'Pinky Store' ?> - Pinky Store</title>
+  <link rel="icon" href="/img/iconos/favicon.png">
   <link rel="stylesheet" href="/css/styles.css">
-  <script src="/js/carrito-local.js" defer></script>
-  <script src="/js/banner.js" defer></script>
-  <script src="/js/dolar.js" defer></script>
-  <script src="/js/validaciones.js" defer></script>
 </head>
 <body>
 
@@ -25,7 +22,7 @@
 
   <div class="header-right">
     <button class="icono-boton" onclick="toggleBuscador()" title="Buscar">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b56b83" stroke-width="2" stroke-linecap="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#b56b83" stroke-width="2" stroke-linecap="round">
         <circle cx="11" cy="11" r="7"></circle>
         <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
       </svg>
@@ -33,28 +30,30 @@
 
     <?php if (isset($_SESSION['usuario'])): ?>
       <a href="/perfil" class="icono-boton" title="Mi perfil">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b56b83" stroke-width="2" stroke-linecap="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#b56b83" stroke-width="2" stroke-linecap="round">
           <circle cx="12" cy="8" r="4"></circle>
           <path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path>
         </svg>
       </a>
     <?php else: ?>
       <a href="/login" class="icono-boton" title="Acceso">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b56b83" stroke-width="2" stroke-linecap="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#b56b83" stroke-width="2" stroke-linecap="round">
           <circle cx="12" cy="8" r="4"></circle>
           <path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path>
         </svg>
       </a>
     <?php endif; ?>
 
-    <a href="/carrito" class="icono-boton" title="Carrito">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b56b83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="9" cy="21" r="1"></circle>
-        <circle cx="20" cy="21" r="1"></circle>
-        <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"></path>
-      </svg>
-      <span id="carrito-badge" class="carrito-badge"></span>
-    </a>
+    <?php if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin'): ?>
+      <a href="/carrito" class="icono-boton" title="Carrito">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#b56b83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"></path>
+        </svg>
+        <span id="carrito-badge" class="carrito-badge"></span>
+      </a>
+    <?php endif; ?>
   </div>
 
   <div id="buscador" class="buscador">
@@ -103,7 +102,11 @@
   <a href="/categorias">Categorias</a>
   <a href="/nosotros">Nosotros</a>
   <a href="/contacto">Contacto</a>
-  <a href="/carrito">Carrito</a>
+
+  <?php if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin'): ?>
+    <a href="/carrito">Carrito</a>
+  <?php endif; ?>
+
   <?php if (isset($_SESSION['usuario'])): ?>
     <a href="/mis-pedidos">Mis pedidos</a>
     <a href="/perfil">Mi perfil</a>

@@ -9,7 +9,7 @@
         <circle cx="17.5" cy="6.5" r="1" fill="#b56b83"/>
       </svg>
     </a>
-    <a href="https://wa.me/54111111111" target="_blank" title="WhatsApp">
+    <a href="https://wa.me/541124624235" target="_blank" title="WhatsApp">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b56b83" stroke-width="2">
         <path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"/>
       </svg>
@@ -21,7 +21,6 @@
       </svg>
     </a>
   </div>
-
   <div class="footer-info">
     <span>Pinky Store</span>
   </div>
@@ -42,6 +41,11 @@ function toggleBuscador() {
   }
 }
 </script>
+
+<script src="/js/banner.js"></script>
+<script src="/js/dolar.js"></script>
+<script src="/js/validaciones.js"></script>
+<script src="/js/carrito-local.js"></script>
 
 </body>
 </html>

@@ -61,7 +61,6 @@ class Cliente
             ':id'        => $id,
         ];
 
-        // Si se cambió la clave, actualizarla
         if (!empty($d['clave'])) {
             $sql .= ", clave_hash = :hash";
             $params[':hash'] = password_hash($d['clave'], PASSWORD_BCRYPT);
@@ -86,7 +85,7 @@ class Cliente
     public static function eliminar(int $id): void
     {
         $db = getDB();
-        $stmt = $db->prepare("DELETE FROM usuarios WHERE id = :id AND rol = 'cliente'");
+        $stmt = $db->prepare("UPDATE usuarios SET activo = 0 WHERE id = :id AND rol = 'cliente'");
         $stmt->execute([':id' => $id]);
     }
 

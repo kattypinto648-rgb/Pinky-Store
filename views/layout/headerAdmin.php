@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pinky Store</title>
+  <title>Admin - Pinky Store</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -29,9 +29,7 @@
     </button>
 
     <div id="menu-usuario-admin" class="menu-usuario-admin">
-      <a href="/perfil">Mi perfil</a>
-      <a href="/admin/configuracion">Configuracion</a>
-      <a href="/">Ver tienda</a>
+      <a href="/admin/perfil">Mi perfil</a>
       <a href="/logout">Cerrar sesion</a>
     </div>
   </div>

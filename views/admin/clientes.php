@@ -13,7 +13,7 @@
       <tr>
         <th>Nombre</th>
         <th>Email</th>
-        <th>Telefono</th>
+        <th>Teléfono</th>
         <th>Estado</th>
         <th>Acciones</th>
       </tr>
@@ -22,7 +22,11 @@
           <td><?= htmlspecialchars($c['nombre'] . ' ' . $c['apellido']) ?></td>
           <td><?= htmlspecialchars($c['email']) ?></td>
           <td><?= htmlspecialchars($c['telefono'] ?? '') ?></td>
-          <td><?= $c['activo'] ? 'Activo' : 'Inactivo' ?></td>
+          <td>
+            <span class="admin-estado estado-<?= $c['activo'] ? 'entregado' : 'cancelado' ?>">
+              <?= $c['activo'] ? 'Activo' : 'Inactivo' ?>
+            </span>
+          </td>
           <td class="tabla-acciones">
             <a href="/admin/clientes/editar/<?= $c['id'] ?>">Editar</a>
 

@@ -19,6 +19,7 @@ $rutas = [
     ['POST', 'carrito/cantidad',            'ClienteController',     'modificarCantidad'],
     ['GET',  'checkout',                    'ClienteController',     'checkout'],
     ['POST', 'checkout',                    'ClienteController',     'procesarCheckout'],
+    ['POST', 'checkout/aplicar-promocion',  'ClienteController',     'aplicarPromocion'],
     ['GET',  'mis-pedidos',                 'ClienteController',     'misPedidos'],
 
     ['GET',  'login',                       'AuthController',        'mostrarLogin'],
@@ -56,6 +57,8 @@ $rutas = [
     ['GET',  'admin/promociones/editar/:id','PromocionController',   'formularioEditar'],
     ['POST', 'admin/promociones/guardar',   'PromocionController',   'guardar'],
     ['POST', 'admin/promociones/eliminar',  'PromocionController',   'eliminar'],
+
+    ['GET',  'admin/perfil',                'AdminController',       'perfil'],
 ];
 
 $metodo = $_SERVER['REQUEST_METHOD'];
@@ -86,7 +89,23 @@ foreach ($rutas as $r) {
 
 if (!$encontrada) {
     http_response_code(404);
-    echo "<h1>404 - Página no encontrada</h1>";
-    echo "<p>Ruta: <code>" . htmlspecialchars($ruta) . "</code></p>";
-    echo "<p><a href='/'>Volver al inicio</a></p>";
+    ?>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>404 - Pinky Store</title>
+      <link rel="stylesheet" href="/css/styles.css">
+    </head>
+    <body>
+      <div class="pagina-404">
+        <h1>404</h1>
+        <p>Uy... esta página no existe.</p>
+        <p class="ruta-404">Buscaste: <code><?= htmlspecialchars($ruta) ?></code></p>
+        <a href="/" class="boton-agregar" style="display:inline-block;text-decoration:none;padding:12px 24px;">Volver al inicio</a>
+      </div>
+    </body>
+    </html>
+    <?php
 }
